@@ -1,6 +1,7 @@
 // ES6 문법을 지원해 export & import를 사용하는 browser과는 달리, nodeJS는 CommonJS module을 사용하기에 require을 사용한다.
-const http = require("http");
-
+const express = require("express");
+// express is function that is used to create an express application (stored in the app variable)
+const app = express();
 let notes = [
     {
         id: 1,
@@ -22,11 +23,16 @@ let notes = [
     }
 ];
 
-const app = http.createServer((req, res) => {
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify(notes));
+// define routes
+app.get("/", (req, res) => {
+    res.send("<h1>hello world!</h1>");
+});
+
+app.get("/notes", (req, res) => {
+    res.json(notes);
 });
 
 const port = 3001;
-app.listen(port);
-console.log(`Server running on ${port}`);
+app.listen(port, () => {
+    console.log(`Server running on ${port}`);
+});

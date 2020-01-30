@@ -1,23 +1,27 @@
 {
-  "name": "backend",
-  "version": "0.0.1",
-  "description": "![thumbnail](README.assets/thumbnail.png)",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hanameee/FSO2019_2.git"
-  },
-  "author": "Hannah Lee",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/hanameee/FSO2019_2/issues"
-  },
-  "homepage": "https://github.com/hanameee/FSO2019_2#readme",
-  "dependencies": {
-    "express": "^4.17.1"
-  }
+    "name": "backend",
+    "version": "0.0.1",
+    "description": "![thumbnail](README.assets/thumbnail.png)",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "watch": "nodemon index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/hanameee/FSO2019_2.git"
+    },
+    "author": "Hannah Lee",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/hanameee/FSO2019_2/issues"
+    },
+    "homepage": "https://github.com/hanameee/FSO2019_2#readme",
+    "dependencies": {
+        "express": "^4.17.1"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.2"
+    }
 }
