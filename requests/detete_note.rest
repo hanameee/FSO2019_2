@@ -1,0 +1,4 @@
+delete http://localhost:3001/api/persons/1
+
+get http://localhost:3001/api/persons
+
