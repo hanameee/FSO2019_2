@@ -64,3 +64,41 @@ console.log(copiedArr) // ['a', 'b', 'c']
 // 배열 복사에도 사용할 수 있습니다.
 ```
 
+#### HTTP request types 에 대해
+
+- **GET, HEAD HTTP request는 "safe" 하다** : 서버에 어떠한 side effect도 미치지 않는다
+- **POST를 제외한 모든 HTTP request는 "idempotent" 하다** : GET, HEAD, PUT 그리고 DELETE 요청의 경우 n번 연속해서 요쳥해도 같은 결과를 가진다.
+- **POST HTTP request는 safe 하지도, idempotent 하지도 않다 **: server에 side effect을 초래하며 (새로운 note 생성 - not safe) 요청이 n번 반복될 경우 n개의 동일한 note가 생긴다. (not idempotent)
+
+#### Middleware
+
+Middleware 이란?  ***request* 와 *response* 객체를 handling 하기 위한 함수**이다.
+
+우리는 POST 요청을 처리하기 위해 `body-parser` middleware을 사용했었다.
+`body-parser` 은 (1) request object에 저장된 raw data를 가지고, (2) JS object로 parse 한 후 (3) 이를 request object의 `body`라는 새로운 property에 할당하는 역할을 해 주었다.
+
+```react
+const bodyParser = require("body-parser");
+const app = express();
+// use를 통해 middleware를 express app에 사용등록할 수 있다.
+// 여러개의 middleware 사용 시, 각 middleware 들은 이렇게 사용등록된 순서되로 실행된다.
+app.use(bodyParser.json());
+```
+
+Custom Middleware을 만들어보자!
+
+```react
+const requestLogger = (request, response, next) => {
+  console.log('Method:', request.method)
+  console.log('Path:  ', request.path)
+  // request.body는 bodyParser에 의해 할당되므로 bodyParser을 use한 다음에 requestLogger을 사용해야한다!
+  console.log('Body:  ', request.body)
+  console.log('---')
+  // 다음 middleware 으로의 control
+  next()
+}
+```
+
+만약 Route의 event handler이 호출되기 전에 middleware을 사용하고 싶다면, routes 전에 middleware 함수를 사용해야 한다!
+만약 route 이후에 middleware을 define 하면, 어떤 route handler도 HTTP request를 handle하지 않았을 때에만 호출되는 middleware이라는 뜻이다. 
+

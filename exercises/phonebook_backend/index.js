@@ -2,6 +2,17 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 app.use(bodyParser.json());
+
+const requestLogger = (request, response, next) => {
+    console.log("Method:", request.method);
+    console.log("Path:  ", request.path);
+    // request.body는 bodyParser에 의해 할당되므로 bodyParser을 use한 다음에 requestLogger을 사용해야한다!
+    console.log("Body:  ", request.body);
+    console.log("---");
+    // 다음 middleware 으로의 control
+    next();
+};
+app.use(requestLogger);
 let persons = [
     {
         name: "Arto Hellas",
@@ -83,6 +94,12 @@ app.post("/api/persons", (req, res) => {
     persons = persons.concat(person);
     res.json(person);
 });
+
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: "unknown endpoint" });
+};
+
+app.use(unknownEndpoint);
 
 const port = 3001;
 app.listen(port, () => {
