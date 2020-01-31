@@ -102,3 +102,16 @@ const requestLogger = (request, response, next) => {
 만약 Route의 event handler이 호출되기 전에 middleware을 사용하고 싶다면, routes 전에 middleware 함수를 사용해야 한다!
 만약 route 이후에 middleware을 define 하면, 어떤 route handler도 HTTP request를 handle하지 않았을 때에만 호출되는 middleware이라는 뜻이다. 
 
+#### Morgan
+
+Morgan 은 Logging을 도와주는 middleware 으로, `npm install morgan` 으로 설치하며 아래와 같이 사용한다.
+
+```react
+const morgan = require("morgan");
+...
+const app = express();
+..
+app.use(morgan("tiny")); //나는 tiny option을 사용했지만, 다양한 option이 존재한다.
+```
+
+[morgan middleware 공식 문서](https://github.com/expressjs/morgan)

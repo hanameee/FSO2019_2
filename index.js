@@ -1,9 +1,18 @@
 // ES6 문법을 지원해 export & import를 사용하는 browser과는 달리, nodeJS는 CommonJS module을 사용하기에 require을 사용한다.
 const express = require("express");
 const bodyParser = require("body-parser");
+const morgan = require("morgan");
 // express is function that is used to create an express application (stored in the app variable)
 const app = express();
 app.use(bodyParser.json());
+morgan.token("data", function(req, res) {
+    return JSON.stringify(req.body);
+});
+app.use(
+    morgan(
+        ":method :url :status :res[content-length] - :response-time ms :data"
+    )
+);
 let notes = [
     {
         id: 1,
@@ -63,7 +72,6 @@ app.delete("/notes/:id", (req, res) => {
 const generateId = () => {
     const maxId =
         notes.length > 0 ? Math.max(...notes.map(note => note.id)) : 0;
-    console.log(maxId, "maxId");
     return maxId + 1;
 };
 // post note and return that note - bodyparser required
