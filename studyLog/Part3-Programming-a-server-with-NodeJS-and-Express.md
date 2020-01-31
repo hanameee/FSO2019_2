@@ -115,3 +115,20 @@ app.use(morgan("tiny")); //나는 tiny option을 사용했지만, 다양한 opti
 ```
 
 [morgan middleware 공식 문서](https://github.com/expressjs/morgan)
+
+---
+
+### b) [Deploying app to internet](https://fullstackopen.com/en/part3/deploying_app_to_internet)
+
+#### CORS (Cross Origin Resource Sharing) [참고 링크](https://velog.io/@wlsdud2194/cors)
+
+클라이언트와 서버의 오리진이 다를 때 발생하는 이슈.
+
+1. 왜 발생하는가?
+
+   same-origin policy 때문에 >  더 알아보기
+
+2. 어떻게 해결하는가?
+
+   1) 서버에서 cross-origin HTTP 요청을 허가 해주기 OR
+   2) (리액트 개발 환경에서는) webpack-dev-server proxy 기능을 사용하기 [참고 링크](https://velog.io/@ground4ekd/nodejs-cra-proxy)

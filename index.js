@@ -1,10 +1,10 @@
-// ES6 문법을 지원해 export & import를 사용하는 browser과는 달리, nodeJS는 CommonJS module을 사용하기에 require을 사용한다.
 const express = require("express");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
-// express is function that is used to create an express application (stored in the app variable)
+const cors = require("cors");
 const app = express();
 app.use(bodyParser.json());
+app.use(cors());
 morgan.token("data", function(req, res) {
     return JSON.stringify(req.body);
 });
@@ -13,87 +13,95 @@ app.use(
         ":method :url :status :res[content-length] - :response-time ms :data"
     )
 );
-let notes = [
+let persons = [
     {
-        id: 1,
-        content: "HTML is easy",
-        date: "2019-05-30T17:30:31.098Z",
-        important: true
+        name: "Arto Hellas",
+        number: "040-123456",
+        id: 1
     },
     {
-        id: 2,
-        content: "Browser can execute only Javascript",
-        date: "2019-05-30T18:39:34.091Z",
-        important: false
+        name: "Ada Lovelace",
+        number: "39-44-5323523",
+        id: 2
     },
     {
-        id: 3,
-        content: "GET and POST are the most important methods of HTTP protocol",
-        date: "2019-05-30T19:20:14.298Z",
-        important: true
+        name: "Dan Abramov",
+        number: "12-43-234345",
+        id: 3
+    },
+    {
+        name: "Mary Poppendieck",
+        number: "39-23-6423122",
+        id: 4
     }
 ];
 
-// define routes
 app.get("/", (req, res) => {
-    res.send("<h1>hello world!</h1>");
+    res.send("<h1>Ch3 Phonebook Exercise</h1>");
 });
 
-// get all notes
-app.get("/notes", (req, res) => {
-    res.json(notes);
+app.get("/info", (req, res) => {
+    const numOfPersons = persons.length;
+    const currentTime = new Date();
+    res.send(`<div>Phonebook has info for <b>${numOfPersons}</b> persons</div>
+    <div>${currentTime}</div>`);
 });
 
-// fetch specific note
-app.get("/notes/:id", (req, res) => {
-    // request의 params로 넘어오는 id는 type이 string이기에 number로 변환해줘야 find method를 사용할 수 있다
+app.get("/api/persons", (req, res) => {
+    res.json(persons);
+});
+
+app.get("/api/persons/:id", (req, res) => {
     const id = Number(req.params.id);
-    const note = notes.find(
-        note =>
-            // console.log(note.id, typeof note.id, id, typeof id, note.id === id);
-            note.id === id
-    );
-    if (note) {
-        res.json(note);
+    const person = persons.find(person => person.id === id);
+    if (person) {
+        res.json(person);
     } else {
         res.status(404).end();
     }
 });
 
-// delete specific note
-app.delete("/notes/:id", (req, res) => {
+app.delete("/api/persons/:id", (req, res) => {
     const id = Number(req.params.id);
-    notes = notes.filter(note => note.id !== id);
-    // status code 204 : no content
+    persons = persons.filter(person => person.id !== id);
     res.status(204).end();
 });
 
-// logic for generating new id
 const generateId = () => {
-    const maxId =
-        notes.length > 0 ? Math.max(...notes.map(note => note.id)) : 0;
-    return maxId + 1;
+    return Math.floor(Math.random() * 1000000);
 };
-// post note and return that note - bodyparser required
-app.post("/notes", (req, res) => {
+
+app.post("/api/persons", (req, res) => {
     const body = req.body;
-    if (!body.content) {
-        // status code 400 : bad request
+    if (!body.name) {
         return res.status(400).json({
-            error: "content missing"
+            error: "name missing"
+        });
+    } else if (!body.number) {
+        return res.status(400).json({
+            error: "number missing"
+        });
+    } else if (persons.find(person => person.name === body.name)) {
+        return res.status(400).json({
+            error: "name must be unique"
         });
     }
-    const note = {
-        content: body.content,
-        important: body.imporatant || false,
-        date: new Date(),
+    const person = {
+        name: body.name,
+        number: body.number,
         id: generateId()
     };
-    notes = notes.concat(note);
-    res.json(note);
+    persons = persons.concat(person);
+    res.json(person);
 });
 
-const port = 3001;
-app.listen(port, () => {
-    console.log(`Server running on ${port}`);
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: "unknown endpoint" });
+};
+
+app.use(unknownEndpoint);
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
