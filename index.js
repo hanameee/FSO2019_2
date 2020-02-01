@@ -36,17 +36,17 @@ let notes = [
 ];
 
 // define routes
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
     res.send("<h1>hello world!</h1>");
 });
 
 // get all notes
-app.get("/notes", (req, res) => {
+app.get("/api/notes", (req, res) => {
     res.json(notes);
 });
 
 // fetch specific note
-app.get("/notes/:id", (req, res) => {
+app.get("/api/notes/:id", (req, res) => {
     // request의 params로 넘어오는 id는 type이 string이기에 number로 변환해줘야 find method를 사용할 수 있다
     const id = Number(req.params.id);
     const note = notes.find(
@@ -62,7 +62,7 @@ app.get("/notes/:id", (req, res) => {
 });
 
 // delete specific note
-app.delete("/notes/:id", (req, res) => {
+app.delete("/api/notes/:id", (req, res) => {
     const id = Number(req.params.id);
     notes = notes.filter(note => note.id !== id);
     // status code 204 : no content
@@ -77,7 +77,7 @@ const generateId = () => {
     return maxId + 1;
 };
 // post note and return that note - bodyparser required
-app.post("/notes", (req, res) => {
+app.post("/api/notes", (req, res) => {
     const body = req.body;
     if (!body.content) {
         // status code 400 : bad request
