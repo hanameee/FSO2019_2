@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
+app.use(express.static("build"));
 app.use(bodyParser.json());
 const requestLogger = (request, response, next) => {
     console.log("Method:", request.method);
