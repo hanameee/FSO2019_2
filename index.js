@@ -35,11 +35,11 @@ let persons = [
     }
 ];
 
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
     res.send("<h1>Ch3 Phonebook Exercise</h1>");
 });
 
-app.get("/info", (req, res) => {
+app.get("/api/info", (req, res) => {
     const numOfPersons = persons.length;
     const currentTime = new Date();
     res.send(`<div>Phonebook has info for <b>${numOfPersons}</b> persons</div>
