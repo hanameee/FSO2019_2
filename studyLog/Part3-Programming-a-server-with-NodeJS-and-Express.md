@@ -132,3 +132,24 @@ app.use(morgan("tiny")); //나는 tiny option을 사용했지만, 다양한 opti
 
    1) 서버에서 cross-origin HTTP 요청을 허가 해주기 OR
    2) (리액트 개발 환경에서는) webpack-dev-server proxy 기능을 사용하기 [참고 링크](https://velog.io/@ground4ekd/nodejs-cra-proxy)
+
+#### CRA의 Proxy 기능
+
+Frontend를 deploy해서 build한 폴더를 Backend에 옮김으로써 Frontend의 axios baseURL을 절대경로에서 상대경로로 바꿨었다.
+
+```react
+const baseURL = `api/notes`; //이렇게!
+```
+
+이렇게 상대경로로 바꾸는 바람에 development mode에서는 communication with server가 작동하지 않는다.  *localhost:3000/api/notes* 라는 잘못된 경로로 요청을 보내기 때문!
+
+프론트엔드를 CRA로 만들었다면, 이 문제를 간단하게 해결할 수 있다.
+
+```json
+// Package.json
+{
+ ...
+"proxy": "http://localhost:3001"
+}
+```
+
