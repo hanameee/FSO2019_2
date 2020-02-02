@@ -153,3 +153,7 @@ const baseURL = `api/notes`; //이렇게!
 }
 ```
 
+이걸 추가해주면 React의 development mode는 Proxy server로 동작하고, React server 내에서 해결하는 요청 (ex. internal CSS, internal JS)이 아닐 경우 해당 프록시로 명시한 주소로 요청이 날라간다는 것!
+
+### [c) Saving data to MongoDB](https://fullstackopen.com/en/part3/saving_data_to_mongo_db)
+
