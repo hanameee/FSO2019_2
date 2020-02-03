@@ -1,31 +1,38 @@
 const mongoose = require("mongoose");
 
-if (process.argv.length < 3) {
-    console.log("give password as argument");
-    process.exit(1);
-}
-
 const password = process.argv[2];
+const nameParam = process.argv[3];
+const numberParam = process.argv[4];
+const url = `mongodb+srv://hannah:${password}@cluster0-wd05v.mongodb.net/note-app?retryWrites=true&w=majority`;
 
-const url = `mongodb+srv://hannah:${password}@cluster0-wd05v.mongodb.net/test?retryWrites=true&w=majority`;
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
-mongoose.connect(url, { useNewUrlParser: true });
-
-const noteSchema = new mongoose.Schema({
-    content: String,
-    date: Date,
-    important: Boolean
+const personSchema = new mongoose.Schema({
+    name: String,
+    number: Number
 });
 
-const Note = mongoose.model("Note", noteSchema);
+const Person = mongoose.model("Person", personSchema);
 
-const note = new Note({
-    content: "HTML is easy",
-    date: new Date(),
-    important: true
+const person = new Person({
+    name: nameParam,
+    number: numberParam
 });
 
-note.save().then(response => {
-    console.log("note saved");
-    mongoose.connection.close();
-});
+if (process.argv.length < 3) {
+    console.log("please give password as argument");
+    process.exit(1);
+} else if (process.argv.length === 5) {
+    person.save().then(response => {
+        console.log(`$added ${nameParam} ${numberParam} to phonebook`);
+        mongoose.connection.close();
+    });
+} else if (process.argv.length === 3) {
+    console.log("phonebook:");
+    Person.find({}).then(result => {
+        result.forEach(person => {
+            console.log(person);
+        });
+        mongoose.connection.close();
+    });
+}
