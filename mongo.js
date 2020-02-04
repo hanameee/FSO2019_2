@@ -9,7 +9,7 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const personSchema = new mongoose.Schema({
     name: String,
-    number: Number
+    number: String
 });
 
 const Person = mongoose.model("Person", personSchema);
@@ -24,14 +24,14 @@ if (process.argv.length < 3) {
     process.exit(1);
 } else if (process.argv.length === 5) {
     person.save().then(response => {
-        console.log(`$added ${nameParam} ${numberParam} to phonebook`);
+        console.log(`added ${nameParam} ${numberParam} to phonebook`);
         mongoose.connection.close();
     });
 } else if (process.argv.length === 3) {
     console.log("phonebook:");
     Person.find({}).then(result => {
         result.forEach(person => {
-            console.log(person);
+            console.log(person.name + " " + person.number);
         });
         mongoose.connection.close();
     });
