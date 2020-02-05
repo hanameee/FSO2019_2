@@ -157,3 +157,31 @@ const baseURL = `api/notes`; //이렇게!
 
 ### [c) Saving data to MongoDB](https://fullstackopen.com/en/part3/saving_data_to_mongo_db)
 
+#### Node.js 에서 환경변수 파일 설정하기
+
+- 첫번째 방법: 시작할때마다 직접 console에 argument로 입력해주기! Script 짜서 자동화할수도도도도...
+
+- (더 나은) 두번째 방법: MongoDB URL 사용하기 위해 `dotenv` 라이브러리 사용
+
+```js
+// .env 파일
+URL = mongodb+srv://hannah:${password}@어쩌고저쩌고
+```
+
+```js
+// .env 파일에 정의된 환경변수들은 아래 명령어를 쓴 이후부터 process.env.어쩌고 로 불러올 수 있다
+require("dotenv").config();
+// 다른 moudule들을 불러오기 전에 선언할 것!
+const Note = require('./models/note')
+```
+
+```js
+// index.js 파일
+const url = process.env.URL;
+```
+
+
+`.env` 는 바로 gitignore 해주기 +_+!
+
+ [참고 링크](https://m.blog.naver.com/PostView.nhn?blogId=dydals56789&logNo=221516669383&proxyReferer=https%3A%2F%2Fwww.google.com%2F)
+
