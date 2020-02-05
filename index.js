@@ -5,82 +5,50 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 const app = express();
-const Note = require("./models/note");
+const Person = require("./models/person");
 app.use(express.static("build"));
 app.use(bodyParser.json());
 app.use(cors());
 morgan.token("data", function(req, res) {
     return JSON.stringify(req.body);
 });
+(":method :url :status :res[content-length] - :response-time ms :data");
 app.use(
     morgan(
         ":method :url :status :res[content-length] - :response-time ms :data"
     )
 );
-let notes = [
-    {
-        id: 1,
-        content: "HTML is easy",
-        date: "2019-05-30T17:30:31.098Z",
-        important: true
-    },
-    {
-        id: 2,
-        content: "Browser can execute only Javascript",
-        date: "2019-05-30T18:39:34.091Z",
-        important: false
-    },
-    {
-        id: 3,
-        content: "GET and POST are the most important methods of HTTP protocol",
-        date: "2019-05-30T19:20:14.298Z",
-        important: true
-    }
-];
-
 app.get("/api", (req, res) => {
-    res.send("<h1>hello world!</h1>");
+    res.send("<h1>Ch3 Phonebook Exercise</h1>");
 });
 
-// get all notes
-app.get("/api/notes", (req, res) => {
-    Note.find({}).then(notes => {
-        res.json(notes.map(note => note.toJSON()));
+app.get("/api/people", (req, res) => {
+    Person.find({}).then(people => {
+        console.log(people);
+        res.json(people.map(person => person.toJSON()));
     });
 });
 
-// fetch specific note
-app.get("/api/notes/:id", (req, res) => {
-    Note.findById(req.params.id).then(note => {
-        res.json(note.toJSON());
-    });
-});
-
-// delete specific note
-app.delete("/api/notes/:id", (req, res) => {
-    const id = Number(req.params.id);
-    notes = notes.filter(note => note.id !== id);
-    // status code 204 : no content
-    res.status(204).end();
-});
-
-// post note and return that note - bodyparser required
-app.post("/api/notes", (req, res) => {
+app.post("/api/people", (req, res) => {
     const body = req.body;
-    if (body.content === undefined) {
+    if (body.name === undefined) {
         return res.status(400).json({
-            error: "content missing"
+            error: "name missing"
         });
     }
-    const note = new Note({
-        content: body.content,
-        important: body.imporatant || false,
-        date: new Date()
+    const person = new Person({
+        name: body.name,
+        number: body.number
     });
-    note.save().then(savedNote => {
-        console.log(savedNote);
-        res.json(savedNote.toJSON);
+    person.save().then(savedPerson => {
+        res.json(savedPerson.toJSON());
     });
+});
+app.get("/api/info", (req, res) => {
+    const numOfPersons = persons.length;
+    const currentTime = new Date();
+    res.send(`<div>Phonebook has info for <b>${numOfPersons}</b> persons</div>
+    <div>${currentTime}</div>`);
 });
 
 const unknownEndpoint = (request, response) => {
@@ -89,7 +57,7 @@ const unknownEndpoint = (request, response) => {
 
 app.use(unknownEndpoint);
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+const port = process.env.PORT || 3001;
+app.listen(port, () => {
+    console.log(`Server running on ${port}`);
 });
