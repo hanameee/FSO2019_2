@@ -1,1 +1,1 @@
-get http://localhost:3001/api/people
+get http://localhost:3001/api/notes

@@ -5,57 +5,70 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 const app = express();
-const Person = require("./models/person");
+const Note = require("./models/note");
 app.use(express.static("build"));
 app.use(bodyParser.json());
 app.use(cors());
 morgan.token("data", function(req, res) {
     return JSON.stringify(req.body);
 });
-(":method :url :status :res[content-length] - :response-time ms :data");
 app.use(
     morgan(
         ":method :url :status :res[content-length] - :response-time ms :data"
     )
 );
 app.get("/api", (req, res) => {
-    res.send("<h1>Ch3 Phonebook Exercise</h1>");
+    res.send("<h1>hello world!</h1>");
 });
 
-app.get("/api/people", (req, res) => {
-    Person.find({}).then(people => {
-        console.log(people);
-        res.json(people.map(person => person.toJSON()));
+// get all notes
+app.get("/api/notes", (req, res) => {
+    Note.find({}).then(notes => {
+        res.json(notes.map(note => note.toJSON()));
     });
 });
 
-app.get("/api/people/:id", (req, res) => {
-    Person.findById(req.params.id)
-        .then(people => {
-            res.json(people.toJSON());
-        })
-        .catch(error => {
-            console.log(error);
-            res.status(404).end();
-        });
+// fetch specific note
+app.get("/api/notes/:id", (req, res) => {
+    Note.findById(req.params.id).then(note => {
+        res.json(note.toJSON());
+    });
 });
-app.post("/api/people", (req, res) => {
+
+// delete specific note
+app.delete("/api/notes/:id", (req, res) => {
+    const id = Number(req.params.id);
+    notes = notes.filter(note => note.id !== id);
+    // status code 204 : no content
+    res.status(204).end();
+});
+
+// post note and return that note - bodyparser required
+app.post("/api/notes", (req, res) => {
     const body = req.body;
-    if (body.name === undefined) {
+    if (body.content === undefined) {
         return res.status(400).json({
-            error: "name missing"
+            error: "content missing"
         });
     }
-    const person = new Person({
-        name: body.name,
-        number: body.number
+    const note = new Note({
+        content: body.content,
+        important: body.imporatant || false,
+        date: new Date()
     });
-    person.save().then(savedPerson => {
-        res.json(savedPerson.toJSON());
+    note.save().then(savedNote => {
+        console.log(savedNote);
+        res.json(savedNote.toJSON);
     });
 });
 
-const port = process.env.PORT || 3001;
-app.listen(port, () => {
-    console.log(`Server running on ${port}`);
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: "unknown endpoint" });
+};
+
+app.use(unknownEndpoint);
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
