@@ -13,11 +13,24 @@ morgan.token("data", function(req, res) {
     return JSON.stringify(req.body);
 });
 (":method :url :status :res[content-length] - :response-time ms :data");
+
 app.use(
     morgan(
         ":method :url :status :res[content-length] - :response-time ms :data"
     )
 );
+
+app.get("/info", (req, res) => {
+    Person.countDocuments({}, (err, result) => {
+        if (err) {
+            console.log(err);
+        } else {
+            res.send(
+                `<p>Phonebook has info for ${result} people</p><p>${Date()}</p>`
+            );
+        }
+    });
+});
 
 app.get("/api", (req, res) => {
     res.send("<h1>Ch3 Phonebook Exercise</h1>");
