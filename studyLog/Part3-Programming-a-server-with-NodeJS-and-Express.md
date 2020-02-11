@@ -183,3 +183,16 @@ const url = process.env.URL;
 `.env` 는 바로 gitignore 해주기 +\_+!
 
 [참고 링크](https://m.blog.naver.com/PostView.nhn?blogId=dydals56789&logNo=221516669383&proxyReferer=https%3A%2F%2Fwww.google.com%2F)
+
+### d) (Validation and ESLint)[https://fullstackopen.com/en/part3/validation_and_es_lint]
+
+#### res.json과 res.send의 차이점
+
+[참고링크 - Express res.json과 res.send 비교](https://haeguri.github.io/2018/12/30/compare-response-json-send-func/)
+[참고링크2 - req 객체와 res 객체, 그리고 res.send와 res.json의 비교 ](https://uhou.tistory.com/102)
+
+#### express next middleware에 대해
+
+[참고링크](https://psyhm.tistory.com/46?category=654716)
+
+https://haeguri.github.io/2018/12/30/compare-response-json-send-func/

@@ -1,7 +1,6 @@
-post http://localhost:3001/api/people
+post http://localhost:3001/api/notes
 Content-Type: application/json
 
 {
-  "name": "Test Person",
-  "number": "010-1234-1234"
+  "content": "test"
 }

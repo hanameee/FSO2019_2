@@ -69,20 +69,22 @@ app.put("/api/notes/:id", (req, res, next) => {
 });
 
 // post note and return that note - bodyparser required
-app.post("/api/notes", (req, res, next) => {
+app.post("/api/notes", (req, res) => {
     const body = req.body;
+    if (body.content === undefined) {
+        return res.status(400).json({
+            error: "content missing"
+        });
+    }
     const note = new Note({
         content: body.content,
         important: body.important || false,
         date: new Date()
     });
-
-    note.save()
-        .then(savedNote => savedNote.toJSON())
-        .then(savedAndFormattedNote => {
-            res.json(savedAndFormattedNote);
-        })
-        .catch(error => next(error));
+    note.save().then(savedNote => {
+        console.log(savedNote);
+        res.json(savedNote.toJSON());
+    });
 });
 
 const unknownEndpoint = (request, response) => {
@@ -95,9 +97,8 @@ const errorHandler = (error, req, res, next) => {
     console.error(error.message);
     if (error.name === "CastError" && error.kind === "ObjectId") {
         return res.status(400).send({ error: "malformatted id" });
-    } else if (error.name === "ValidationError") {
-        return res.status(400).send({ error: error.message });
     }
+    next(error);
 };
 
 app.use(errorHandler);
