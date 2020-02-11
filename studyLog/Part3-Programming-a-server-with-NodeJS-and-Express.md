@@ -193,6 +193,20 @@ const url = process.env.URL;
 
 #### express next middleware에 대해
 
+```js
+// 여기선 next 가 왜 파라미터로 필요한 걸까?
+const errorHandler = (error, req, res, next) => {
+    console.error(error.message);
+    if (error.name === "CastError" && error.kind === "ObjectId") {
+        return res.status(400).send({ error: "malformatted id" });
+    } else if (error.name === "ValidationError") {
+        return res.status(400).send({ error: error.message });
+    }
+};
+```
+
+next를 파라미터로 주지 않아도 500 Internal server error 로 응답이 오긴 오는데... next를 줘야 400 Bad request로 의도한 메세지만 예쁘게 잘 뜬다. 흠...
+
 [참고링크](https://psyhm.tistory.com/46?category=654716)
 
 https://haeguri.github.io/2018/12/30/compare-response-json-send-func/

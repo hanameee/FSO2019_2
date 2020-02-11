@@ -25,40 +25,39 @@ app.get("/api", (req, res) => {
 
 app.get("/api/people", (req, res) => {
     Person.find({}).then(people => {
+        console.log(people);
         res.json(people.map(person => person.toJSON()));
     });
 });
 
-app.get("/api/people/:id", (req, res, next) => {
+app.get("/api/people/:id", (req, res) => {
     Person.findById(req.params.id)
-        .then(person => {
-            if (person) {
-                res.json(person.toJSON());
-            } else {
-                res.status(404).end();
-            }
+        .then(people => {
+            res.json(people.toJSON());
         })
         .catch(error => {
-            next(error);
+            console.log(error);
+            res.status(404).end();
         });
 });
 
-app.post("/api/people", (req, res, next) => {
+app.post("/api/people", (req, res) => {
     const body = req.body;
+    if (body.name === undefined) {
+        return res.status(400).json({
+            error: "name missing"
+        });
+    }
     const person = new Person({
         name: body.name,
         number: body.number
     });
-    person
-        .save()
-        .then(savedPerson => savedPerson.toJSON())
-        .then(savedAndFormattedPerson => {
-            res.json(savedAndFormattedPerson);
-        })
-        .catch(error => next(error));
+    person.save().then(savedPerson => {
+        res.json(savedPerson.toJSON());
+    });
 });
 
-app.delete("/api/people/:id", (req, res, next) => {
+app.delete("/api/people/:id", (req, res) => {
     Person.findByIdAndRemove(req.params.id, { useFindAndModify: false })
         .then(result => res.status(204).end())
         .catch(error => {
@@ -66,7 +65,7 @@ app.delete("/api/people/:id", (req, res, next) => {
         });
 });
 
-app.put("/api/people/:id", (req, res, next) => {
+app.put("/api/people/:id", (req, res) => {
     const body = req.body;
     const person = {
         name: body.name,
@@ -85,9 +84,8 @@ const errorHandler = (error, req, res, next) => {
     console.error(error.message);
     if (error.name === "CastError" && error.kind === "ObjectId") {
         return res.status(400).send({ error: "malformatted id" });
-    } else if (error.name === "ValidationError") {
-        return res.status(400).send({ error: error.message });
     }
+    next(error);
 };
 
 app.use(errorHandler);
