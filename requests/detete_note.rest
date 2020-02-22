@@ -1,3 +1,0 @@
-delete http://localhost:3001/notes/1
-
-get http://localhost:3001/notes
