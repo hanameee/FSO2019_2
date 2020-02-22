@@ -210,3 +210,6 @@ next를 파라미터로 주지 않아도 500 Internal server error 로 응답이
 [참고링크](https://psyhm.tistory.com/46?category=654716)
 
 https://haeguri.github.io/2018/12/30/compare-response-json-send-func/
+
+#### Lint vs prettier
+
