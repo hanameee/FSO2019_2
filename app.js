@@ -8,10 +8,13 @@ const middleware = require("./utils/middleware");
 const mongoose = require("mongoose");
 const logger = require("./utils/logger");
 mongoose.set("useFindAndModify", false);
-console.log("connecting to", config.MONGODB_URI);
+logger.info("connecting to", config.MONGODB_URI);
 
 mongoose
-    .connect(config.MONGODB_URI, { useNewUrlParser: true })
+    .connect(config.MONGODB_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
     .then(() => {
         logger.info("connected to MongoDB");
     })
