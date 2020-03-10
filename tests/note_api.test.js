@@ -72,7 +72,7 @@ test("a specific note can be viewed", async () => {
         .expect(200)
         .expect("Content-Type", /application\/json/);
 
-    expect(resultNote.body.content).toEqual(noteToView.content);
+    expect(resultNote.body).toEqual(noteToView);
 });
 
 test("a note can be deleted", async () => {
