@@ -2,5 +2,6 @@ post http://localhost:3001/api/notes
 Content-Type: application/json
 
 {
-  "name": "Test"
+  "name": "Test data for check",
+  "content": "This should work"
 }
