@@ -1,8 +1,7 @@
 post http://localhost:3001/api/notes
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhhbmFtZWVlIiwiaWQiOiI1ZTY5Y2ZkZjg4Y2U5MzQ4ZDBkMGI2NzAiLCJpYXQiOjE1ODQwMDU2NjN9.HqMvZ1oO_--SOdF6iwyJK2UWSHLfEm6NMmADSJgeLis
 
 {
-  "content": "I am logged in as hanameee",
+  "content": "this should fail due to invalid token",
   "important": true
 }
