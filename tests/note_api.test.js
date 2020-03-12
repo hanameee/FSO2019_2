@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const supertest = require("supertest");
+
 const Note = require("../models/note");
+const User = require("../models/user");
+
 const app = require("../app");
 const helper = require("./test_helper");
 const api = supertest(app);
@@ -112,6 +115,56 @@ describe("when there is initially some notes saved", () => {
     });
 });
 
+describe("when there is initially one user at db", () => {
+    beforeEach(async () => {
+        await User.deleteMany({});
+        const user = new User({ username: "root", password: "secret" });
+        await user.save();
+    });
+
+    test("creation succeeds with a fresh username", async () => {
+        const usersAtStart = await helper.usersInDb();
+
+        const newUser = {
+            username: "hanameee",
+            name: "hannah",
+            password: "goskgosk"
+        };
+
+        await api
+            .post("/api/users")
+            .send(newUser)
+            .expect(200)
+            .expect("Content-Type", /application\/json/);
+
+        const usersAtEnd = await helper.usersInDb();
+        expect(usersAtEnd.length).toBe(usersAtStart.length + 1);
+
+        const usernames = usersAtEnd.map(u => u.username);
+        expect(usernames).toContain(newUser.username);
+    });
+
+    test("creation fails with a duplicate username", async () => {
+        const usersAtStart = await helper.usersInDb();
+
+        const newUserWithDuplicateName = {
+            username: "root",
+            name: "groot",
+            password: "secret"
+        };
+
+        const result = api
+            .post("/api/users")
+            .send(newUserWithDuplicateName)
+            .expect(400)
+            .expect("Content-Type", /application\/json/);
+
+        expect(result.body.error).toContain("`username` to be unique");
+
+        const usersAtEnd = await helper.usersInDb();
+        expect(usersAtEnd.length).toBe(usersAtStart.length);
+    });
+});
 afterAll(() => {
     mongoose.connection.close();
 });
